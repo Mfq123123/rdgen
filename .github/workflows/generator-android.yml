@@ -585,6 +585,13 @@ jobs:
         run: |
           curl -i -X POST -H "Content-Type: multipart/form-data" -H "Authorization: Bearer ${{ fromJson(inputs.extras).token }}" -F "file=@./signed-apk/${{ inputs.filename }}-${{ matrix.job.arch }}.apk" ${{ inputs.apiServer }}/api/save_custom_client
 
+      - name: Upload APK to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustdesk-apk-${{ matrix.job.arch }}
+          path: ./signed-apk/*.apk
+          if-no-files-found: error
+
       - name: Report Status
         uses: fjogeleit/http-request-action@v1
         continue-on-error: true
